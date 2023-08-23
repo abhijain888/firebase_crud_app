@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: false,
         actions: [
           Text(
-            version,
+            "Version: $version",
             style: const TextStyle(
               fontSize: 12,
             ),
