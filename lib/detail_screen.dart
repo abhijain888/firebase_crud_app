@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class DetailScreen extends StatelessWidget {
-  const DetailScreen({super.key});
+  final String task, desc;
+  final dynamic createdAt;
+  const DetailScreen(
+      {super.key, required this.task, required this.desc, this.createdAt});
 
   @override
   Widget build(BuildContext context) {
@@ -9,11 +12,17 @@ class DetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Task"),
       ),
-      body: const Column(
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("data"),
-          Text("data"),
-          Text("data"),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Task: $task"),
+              Text("Description: $desc"),
+              Text("createdAt: ${createdAt.toString()}"),
+            ],
+          ),
         ],
       ),
     );

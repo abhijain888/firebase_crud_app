@@ -4,7 +4,8 @@ import 'package:firebase_crud/util.dart';
 import 'package:flutter/material.dart';
 
 class AddTaskScreen extends StatelessWidget {
-  final controller = TextEditingController();
+  final taskController = TextEditingController();
+  final descController = TextEditingController();
   AddTaskScreen({super.key});
 
   @override
@@ -18,16 +19,24 @@ class AddTaskScreen extends StatelessWidget {
         child: Column(
           children: [
             TextField(
-              controller: controller,
+              controller: taskController,
               decoration: const InputDecoration(
                 hintText: "Write your task here",
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: descController,
+              decoration: const InputDecoration(
+                hintText: "Add some description (optional)",
               ),
             ),
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () => addTask(
-                context,
-                controller.text,
+                context: context,
+                task: taskController.text,
+                desc: descController.text,
               ),
               child: const Text("Add"),
             )
@@ -37,23 +46,25 @@ class AddTaskScreen extends StatelessWidget {
     );
   }
 
-  void addTask(
-    BuildContext context,
-    String todo,
-  ) async {
+  void addTask({
+    required BuildContext context,
+    required String task,
+    required String desc,
+  }) async {
     try {
-      print(todo);
       var doc = FirebaseFirestore.instance.collection("tasks").doc();
 
-      var task = Task(
+      var data = Task(
         id: doc.id,
-        todo: todo,
+        todo: task,
+        description: desc,
+        createdAt: FieldValue.serverTimestamp(),
       );
 
-      await doc.set(task.toMap());
+      await doc.set(data.toMap());
+
       if (context.mounted) {
         showSnackar(context: context, message: "Task added successfully");
-
         Navigator.of(context).pop();
       }
     } on Exception catch (e) {
